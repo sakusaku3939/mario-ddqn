@@ -18,11 +18,11 @@ class Agent:
         self.gamma = 0.9
 
         self.curr_step = 0
-        self.burnin = 1e5  # 経験を訓練させるために最低限必要なステップ数
+        self.burnin = 100000  # 経験を訓練させるために最低限必要なステップ数
         self.learn_every = 3  # Q_onlineを更新するタイミングを示すステップ数
-        self.sync_every = 1e4  # Q_target & Q_onlineを同期させるタイミングを示すステップ数
+        self.sync_every = 10000  # Q_target & Q_onlineを同期させるタイミングを示すステップ数
 
-        self.save_every = 5e5  # Netを保存するまでの実験ステップの数
+        self.save_every = 500000  # Netを保存するまでの実験ステップの数
         self.save_dir = save_dir
 
         self.use_cuda = torch.cuda.is_available()

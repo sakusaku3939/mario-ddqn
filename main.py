@@ -6,7 +6,6 @@ import gym_super_mario_bros
 from gym.wrappers import FrameStack, GrayScaleObservation, TransformObservation
 from nes_py.wrappers import JoypadSpace
 
-from metrics_logger import MetricLogger
 from agent import Agent
 from wrappers import SkipFrame, ResizeObservation
 
@@ -38,34 +37,30 @@ if __name__ == "__main__":
     save_dir = Path('checkpoints') / datetime.datetime.now().strftime('%Y-%m-%dT%H-%M-%S')
     save_dir.mkdir(parents=True)
 
-    checkpoint = None  # Path('checkpoints/2020-10-21T18-25-27/mario.chkpt')
+    checkpoint = None  # Path('trained_mario.chkpt')
     mario = Agent(state_dim=(4, 84, 84), action_dim=env.action_space.n, save_dir=save_dir, checkpoint=checkpoint)
-
-    logger = MetricLogger(save_dir)
 
     episodes = 10
 
     for e in range(episodes):
+        total_reward = 0
+        step = 0
         state = env.reset()
 
         while True:
+            step += 1
             env.render()
 
             action = mario.act(state)
             next_state, reward, done, info = env.step(action)
+            total_reward += reward
             mario.cache(state, next_state, action, reward, done)
 
             q, loss = mario.learn()
-            logger.log_step(reward, loss, q)
             state = next_state
 
             if done or info['flag_get']:
+                print(f"Episode {e + 1}/{episodes} finished after {step} episode steps with total reward = {total_reward}")
                 break
 
-        logger.log_episode()
-        if e % (episodes // 10) == 0:
-            logger.record(
-                episode=e,
-                epsilon=mario.exploration_rate,
-                step=mario.curr_step
-            )
+    mario.save()
