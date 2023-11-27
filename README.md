@@ -1,5 +1,5 @@
 # Mario-DDQN
-Double Deep Q-Networks（深層強化学習）と OpenAI Gym を使用したスーパー・マリオ・ブラザーズAI。
+深層強化学習の Double Deep Q-Networks と OpenAI Gym を使用したスーパー・マリオ・ブラザーズAI。
 コードはPyTorch Tutorialsをもとに改変しています。
 
 ### 動作環境
